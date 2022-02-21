@@ -1,2 +1,2 @@
-# Enterprise NFT Frontend
+# Enterprise NFT Platform
 
