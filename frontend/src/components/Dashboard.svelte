@@ -32,7 +32,7 @@
     ];
 
     function requestService() {
-        alert(`requesting service`);
+        alert(`requesting service is under construction`);
     }
 
     function enterApp() {
@@ -51,11 +51,11 @@
     });
 
     function buyNFT() {
-        alert(`buying the NFT`);
+        alert(`buying the NFT is under construction`);
     }
 
     function sellNFT() {
-        alert(`selling an NFT`);
+        alert(`selling the NFT is under construction`);
     }
 </script>
 
