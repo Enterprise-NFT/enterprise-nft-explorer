@@ -10,7 +10,8 @@ app.get("/", function (req, res) {
     res.sendFile(pathToIndexHTML);
 });
 
+const port = Deno.args[0]
 app.listen(
-    3000,
-    () => console.log("server has started on http://localhost:3000 🚀"),
+    port,
+    () => console.log(`server has started on http://localhost:${port} 🚀`),
 );
