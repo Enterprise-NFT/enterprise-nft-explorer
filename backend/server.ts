@@ -24,8 +24,8 @@ if (Deno.args[0] === '443') {
 
     const options = {
         port: Number(Deno.args[0]),
-        certFile: "/etc/letsencrypt/live/openforce.de/fullchain.pem",
-        keyFile: "/etc/letsencrypt/live/openforce.de/privkey.pem"
+        certFile: "/etc/letsencrypt/live/enterprise-nft.org/fullchain.pem",
+        keyFile: "/etc/letsencrypt/live/enterprise-nft.org/privkey.pem"
     }
 
 
