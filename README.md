@@ -1,2 +1,2 @@
-# Enterprise NFT Platform
+# Enterprise NFT Explorer
 
