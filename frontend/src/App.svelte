@@ -1,27 +1,26 @@
 <script>
-  import Home from "@/components/Home.svelte";
   import { fade } from "svelte/transition";
-  import Metamask from "./components/Metamask.svelte";
-
-  let name = "World";
+  import Dashboard from "./components/Dashboard.svelte";
+  import Title from "./components/Title.svelte";
 </script>
 
-<main transition:fade>
-  <Metamask />
-  <Home {name} />
-</main>
+<body>
+  <main transition:fade>
+    <Title />
+    <Dashboard />
+  </main>
+</body>
 
 <style>
+  body {
+    background-color: black;
+    background-size: cover;
+    margin-left: 0 auto;
+    margin-right: auto;
+    width: 100%;
+    min-width: 100%;
+  }
   main {
     text-align: center;
-    padding: 1em;
-    max-width: 240px;
-    margin: 0 auto;
-  }
-
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
   }
 </style>
