@@ -102,7 +102,7 @@
                 </td>
 
                 <td>
-                    <button on:click={sellNFT}> Sell </button>
+                    <button on:click={sellNFT}> List for Sale </button>
                 </td>
             </tr>
         {/each}
@@ -135,7 +135,7 @@
                 </td>
 
                 <td>
-                    <button on:click={buyNFT}> Buy </button>
+                    <button on:click={buyNFT}> Make an Offer </button>
                 </td>
             </tr>
         {/each}
