@@ -1,6 +1,12 @@
-<!-- <script>
-    import { onMount } from "svelte";
+<script>
+    // import Web3 from "https://deno.land/x/web3/mod.ts";
+    import { ethers } from "https://cdn.skypack.dev/ethers";
+    import { fiduciaryABI } from "../abi-constants.ts";
+
+    // import { onMount } from "svelte";
+
     let account = "";
+    let provider;
     let yourNFTs = [
         {
             link: "https://raw.githubusercontent.com/Enterprise-NFT/nft-artifacts/main/EnterpriseNFTLogo.png",
@@ -32,30 +38,60 @@
     ];
 
     function requestService() {
-        alert(`requesting service is under construction`);
+        alert(`requesting service`);
+
+        // const status = fiduciarySmartContract.getPurchaseStatus();
     }
 
-    function enterApp() {
-        if (typeof window.ethereum !== "undefined") {
-            console.log("MetaMask is installed!");
+    async function execute() {
+        // const contractAddress =
+        // const abi =
+        //
+    }
 
-            ethereum.request({ method: "eth_requestAccounts" });
+    async function enterApp() {
+        if (typeof window.ethereum === "undefined") {
+            alert("You need to install a browserwallet like metamask.io.");
+        } else {
+            const accounts = await ethereum.request({
+                method: "eth_requestAccounts",
+            });
+            account = accounts[0];
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            console.log(signer);
+            const blocknumber = await provider.getBlockNumber();
+            console.log(blocknumber);
+            const etherBalance = await provider.getBalance(account);
+            console.log(ethers.utils.formatEther(etherBalance));
+
+            const contractAddress =
+                "0xf3d762018ec77c4a8dc129a6e89737c73c545970";
+            // ethereum connection
+            // alert(fiduciaryABI);
+            const fiduciarySmartContract = new ethers.Contract(
+                contractAddress,
+                fiduciaryABI,
+                provider
+            );
+
+            const offers = fiduciarySmartContract.offers;
+            // const offers = fiduciarySmartContract.getOffers();
+
+            console.log(offers);
+            // setSigner(provider.getSigner());
         }
     }
 
-    onMount(async () => {
-        const accounts = await ethereum.request({
-            method: "eth_requestAccounts",
-        });
-        account = accounts[0];
-    });
+    // onMount(async () => {
+    // });
 
     function buyNFT() {
-        alert(`buying the NFT is under construction`);
+        alert(`buying the NFT`);
     }
 
     function sellNFT() {
-        alert(`selling the NFT is under construction`);
+        alert(`selling an NFT`);
     }
 </script>
 
@@ -102,7 +138,7 @@
                 </td>
 
                 <td>
-                    <button on:click={sellNFT}> List for Sale </button>
+                    <button on:click={sellNFT}> Sell </button>
                 </td>
             </tr>
         {/each}
@@ -135,7 +171,7 @@
                 </td>
 
                 <td>
-                    <button on:click={buyNFT}> Make an Offer </button>
+                    <button on:click={buyNFT}> Buy </button>
                 </td>
             </tr>
         {/each}
@@ -170,4 +206,4 @@
         margin-left: 1em;
         margin-right: 1em;
     }
-</style> -->
+</style>
