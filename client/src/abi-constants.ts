@@ -155,8 +155,46 @@ export const fiduciaryABI = [
 	{
 		"inputs": [],
 		"name": "getOffers",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "status",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "note",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "offerPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "relatedAsset",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "validUnitl",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct Fiduciary.offer[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -357,4 +395,5 @@ export const fiduciaryABI = [
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
+
 ]
