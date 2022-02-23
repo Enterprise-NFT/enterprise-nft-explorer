@@ -59,16 +59,13 @@
                 method: "eth_requestAccounts",
             });
             account = accounts[0];
-            provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = await provider.getSigner();
-            console.log(signer);
-            const blocknumber = await provider.getBlockNumber();
-            console.log(blocknumber);
-            const etherBalance = await provider.getBalance(account);
-            console.log(ethers.utils.formatEther(etherBalance));
+            provider = new ethers.providers.Web3Provider(
+                window.ethereum,
+                "any"
+            );
 
             const contractAddress =
-                "0x8c6032d2a8da04793b7254d4a81a3992a5975bdd";
+                "0xb566d2f44ec67966c06f9a5b20f79b4041c8d333";
             // alert(fiduciaryABI);
             const fiduciarySmartContract = new ethers.Contract(
                 contractAddress,
@@ -76,8 +73,31 @@
                 provider
             );
 
-            // await fiduciarySmartContract.connect(signer);
-            const offers = fiduciarySmartContract.getOffers();
+            await provider.send("eth_requestAccounts", []);
+
+            const signer = provider.getSigner();
+            console.log(signer);
+
+            await fiduciarySmartContract.connect(signer);
+
+            const name = await fiduciarySmartContract.getName();
+            console.log(name);
+
+            const offers = await fiduciarySmartContract.getOffers();
+            console.log(offers);
+
+            const offer = [
+                1805,
+                "Open",
+                "Patrick Rockt",
+                1000,
+                0x872522aa1cb49fe46a5c9d7a1ab8dc0f40bd8350,
+                34534,
+            ];
+
+            const tx = await fiduciarySmartContract.makeOfferWith(offer);
+
+            // console.log(tx);
 
             // console.log(JSON.stringify(offers));
             // setSigner(provider.getSigner());
