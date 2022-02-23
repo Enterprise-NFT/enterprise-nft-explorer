@@ -68,7 +68,7 @@
             console.log(ethers.utils.formatEther(etherBalance));
 
             const contractAddress =
-                "0x36c99e8742c7a29a1cc0e56278d30dc7e18f2310";
+                "0x8c6032d2a8da04793b7254d4a81a3992a5975bdd";
             // alert(fiduciaryABI);
             const fiduciarySmartContract = new ethers.Contract(
                 contractAddress,
@@ -76,9 +76,8 @@
                 provider
             );
 
-            console.log(signer);
-            await fiduciarySmartContract.connect(signer);
-            const offers = await fiduciarySmartContract.getOffers();
+            // await fiduciarySmartContract.connect(signer);
+            const offers = fiduciarySmartContract.getOffers();
 
             // console.log(JSON.stringify(offers));
             // setSigner(provider.getSigner());
