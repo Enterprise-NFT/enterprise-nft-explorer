@@ -154,6 +154,19 @@ export const fiduciaryABI = [
 	},
 	{
 		"inputs": [],
+		"name": "getName",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "getOffers",
 		"outputs": [
 			{
@@ -395,5 +408,4 @@ export const fiduciaryABI = [
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
-
 ]
