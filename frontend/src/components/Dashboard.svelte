@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
     import { onMount } from "svelte";
     let account = "";
     let yourNFTs = [
@@ -170,4 +170,4 @@
         margin-left: 1em;
         margin-right: 1em;
     }
-</style>
+</style> -->
