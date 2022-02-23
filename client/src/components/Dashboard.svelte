@@ -60,7 +60,7 @@
             });
             account = accounts[0];
             provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
+            const signer = await provider.getSigner();
             console.log(signer);
             const blocknumber = await provider.getBlockNumber();
             console.log(blocknumber);
@@ -69,16 +69,18 @@
 
             const contractAddress =
                 "0x36c99e8742c7a29a1cc0e56278d30dc7e18f2310";
-            alert(fiduciaryABI);
+            // alert(fiduciaryABI);
             const fiduciarySmartContract = new ethers.Contract(
                 contractAddress,
                 fiduciaryABI,
                 provider
             );
 
+            console.log(signer);
+            await fiduciarySmartContract.connect(signer);
             const offers = await fiduciarySmartContract.getOffers();
 
-            console.log(JSON.stringify(offers));
+            // console.log(JSON.stringify(offers));
             // setSigner(provider.getSigner());
         }
     }
