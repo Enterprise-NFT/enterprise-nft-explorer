@@ -1,6 +1,8 @@
 <script>
     // import Web3 from "https://deno.land/x/web3/mod.ts";
     import { ethers } from "https://cdn.skypack.dev/ethers";
+
+    // import { ethers } from "https://raw.githubusercontent.com/distributed-ledger-technology/ethers/main/mod.ts";
     import { fiduciaryABI } from "../abi-constants.ts";
 
     // import { onMount } from "svelte";
@@ -66,19 +68,17 @@
             console.log(ethers.utils.formatEther(etherBalance));
 
             const contractAddress =
-                "0xf3d762018ec77c4a8dc129a6e89737c73c545970";
-            // ethereum connection
-            // alert(fiduciaryABI);
+                "0x36c99e8742c7a29a1cc0e56278d30dc7e18f2310";
+            alert(fiduciaryABI);
             const fiduciarySmartContract = new ethers.Contract(
                 contractAddress,
                 fiduciaryABI,
                 provider
             );
 
-            const offers = fiduciarySmartContract.offers;
-            // const offers = fiduciarySmartContract.getOffers();
+            const offers = await fiduciarySmartContract.getOffers();
 
-            console.log(offers);
+            console.log(JSON.stringify(offers));
             // setSigner(provider.getSigner());
         }
     }
