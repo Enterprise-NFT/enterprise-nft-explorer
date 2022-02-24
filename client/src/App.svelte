@@ -1,13 +1,13 @@
 <script>
   import { fade } from "svelte/transition";
-  import Dashboard from "./components/Dashboard.svelte";
+  import ERC721Dashboard from "./components/ERC721Dashboard.svelte";
   import Title from "./components/Title.svelte";
 </script>
 
 <body>
   <main transition:fade>
     <Title />
-    <Dashboard />
+    <ERC721Dashboard />
   </main>
 </body>
 

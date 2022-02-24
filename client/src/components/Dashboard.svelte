@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
     // import Web3 from "https://deno.land/x/web3/mod.ts";
     import { ethers } from "https://cdn.skypack.dev/ethers";
 
@@ -7,8 +7,13 @@
 
     // import { onMount } from "svelte";
 
+    let contractAddress = "0xb566d2f44ec67966c06f9a5b20f79b4041c8d333";
+    let fiduciarySmartContract;
+    let fiduciarySmartContractWithSigner;
+
     let account = "";
     let provider;
+
     let yourNFTs = [
         {
             link: "https://raw.githubusercontent.com/Enterprise-NFT/nft-artifacts/main/EnterpriseNFTLogo.png",
@@ -45,13 +50,7 @@
         // const status = fiduciarySmartContract.getPurchaseStatus();
     }
 
-    async function execute() {
-        // const contractAddress =
-        // const abi =
-        //
-    }
-
-    async function enterApp() {
+    async function connectToBrowserWallet() {
         if (typeof window.ethereum === "undefined") {
             alert("You need to install a browserwallet like metamask.io.");
         } else {
@@ -64,10 +63,7 @@
                 "any"
             );
 
-            const contractAddress =
-                "0xb566d2f44ec67966c06f9a5b20f79b4041c8d333";
-            // alert(fiduciaryABI);
-            const fiduciarySmartContract = new ethers.Contract(
+            fiduciarySmartContract = new ethers.Contract(
                 contractAddress,
                 fiduciaryABI,
                 provider
@@ -77,8 +73,6 @@
 
             const signer = provider.getSigner();
             console.log(signer);
-
-            await fiduciarySmartContract.connect(signer);
 
             const name = await fiduciarySmartContract.getName();
             console.log(name);
@@ -95,9 +89,14 @@
                 34534,
             ];
 
-            const tx = await fiduciarySmartContract.makeOfferWith(offer);
+            fiduciarySmartContractWithSigner =
+                fiduciarySmartContract.connect(signer);
 
-            // console.log(tx);
+            const tx = await fiduciarySmartContractWithSigner.makeOfferWith(
+                offer
+            );
+
+            console.log(tx);
 
             // console.log(JSON.stringify(offers));
             // setSigner(provider.getSigner());
@@ -121,7 +120,7 @@
         You are logged in via the following browserwallet: <p />
         {account}.
     {:else}
-        <button on:click={enterApp}> Enter App </button>
+        <button on:click={connectToBrowserWallet}>Connect Browserwallet</button>
     {/if}
 </div>
 
@@ -227,4 +226,4 @@
         margin-left: 1em;
         margin-right: 1em;
     }
-</style>
+</style> -->
