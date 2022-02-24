@@ -4,7 +4,7 @@
 
     import { onMount } from "svelte";
 
-    let contractAddress = "0x3E3206608D7fD3BA19580704d3503Abebf8284BA";
+    let contractAddress = "0xc5e961ad6019c42cafd7609f3517be5cd0f767d8";
     let erc721AllInOneContract;
     let erc721AllInOneContractWithSigner;
 
@@ -57,6 +57,8 @@
     }
 
     onMount(async () => {
+        // const result = ethers.Wallet.createRandom();
+        // console.log(result);
         setInterval(async () => {
             if (account !== "") {
                 purchaseRight1Status =
