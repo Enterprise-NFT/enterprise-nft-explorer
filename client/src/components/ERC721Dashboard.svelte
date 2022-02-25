@@ -1,34 +1,25 @@
 <script>
     import { ethers } from "https://cdn.skypack.dev/ethers";
-    import { erc721AllInOneABI } from "../abi-constants.ts";
+    import { erc721ABI, fiduciaryABI } from "../abi-constants.ts";
 
     import { onMount } from "svelte";
 
-    let contractAddress = "0xc5e961ad6019c42cafd7609f3517be5cd0f767d8";
-    let erc721AllInOneContract;
-    let erc721AllInOneContractWithSigner;
+    let fiduciaryContractAddress = "0x63C6605D74947E165cE483860C2E99Ea962055eC";
 
-    let purchaseRight1Status = "";
-    let purchaseRight2Status = "";
+    let erc721Contract;
+    let erc721ContractWithSigner;
+    let erc721ToBeTransferredContract;
+    let erc721ToBeTransferredContractWithSigner;
+
+    let targetWallet;
+    let nftToBeTransferredAddress;
+
+    let nftAddressesUnderManagement = [];
+    let nftsUnderManagement = [];
+    let ready = false;
 
     let account = "";
     let provider;
-
-    async function requestService1() {
-        const signer = await provider.getSigner();
-        const erc721AllInOneContractWithSigner =
-            erc721AllInOneContract.connect(signer);
-
-        await erc721AllInOneContractWithSigner.executePurchaseRight1();
-    }
-
-    async function requestService2() {
-        const signer = await provider.getSigner();
-        const erc721AllInOneContractWithSigner =
-            erc721AllInOneContract.connect(signer);
-
-        await erc721AllInOneContractWithSigner.executePurchaseRight2();
-    }
 
     async function connectToBrowserWallet() {
         if (typeof window.ethereum === "undefined") {
@@ -43,29 +34,54 @@
                 "any"
             );
 
-            erc721AllInOneContract = await new ethers.Contract(
-                contractAddress,
-                erc721AllInOneABI,
-                provider
-            );
-
-            purchaseRight1Status =
-                await erc721AllInOneContract.getPurchaseRight1Status();
-            purchaseRight2Status =
-                await erc721AllInOneContract.getPurchaseRight2Status();
+            await getNFTInfosAboutMyOwnNFTs();
         }
     }
 
+    async function getNFTInfosAboutMyOwnNFTs() {
+        const fiduciarySmartContract = await new ethers.Contract(
+            fiduciaryContractAddress,
+            fiduciaryABI,
+            provider
+        );
+
+        nftAddressesUnderManagement =
+            await fiduciarySmartContract.getNFTsUnderManagement();
+
+        for (const nftAddressUnderManagement of nftAddressesUnderManagement) {
+            let nftUnderManagement = {};
+            erc721Contract = await new ethers.Contract(
+                nftAddressUnderManagement,
+                erc721ABI,
+                provider
+            );
+
+            nftUnderManagement.address = nftAddressUnderManagement;
+            nftUnderManagement.name = await erc721Contract.name();
+            nftUnderManagement.purchaseRight1Status =
+                await erc721Contract.getPurchaseRight1Status();
+
+            nftUnderManagement.purchaseRight2Status =
+                await erc721Contract.getPurchaseRight2Status();
+
+            nftsUnderManagement.push(nftUnderManagement);
+        }
+        ready = true;
+    }
+
+    function refreshNFTData() {
+        // if (account !== "") {
+        //         purchaseRight1Status =
+        //             await erc721Contract.getPurchaseRight1Status();
+        //         purchaseRight2Status =
+        //             await erc721Contract.getPurchaseRight2Status();
+        //     }
+    }
     onMount(async () => {
         // const result = ethers.Wallet.createRandom();
         // console.log(result);
         setInterval(async () => {
-            if (account !== "") {
-                purchaseRight1Status =
-                    await erc721AllInOneContract.getPurchaseRight1Status();
-                purchaseRight2Status =
-                    await erc721AllInOneContract.getPurchaseRight2Status();
-            }
+            refreshNFTData();
         }, 3 * 1000);
     });
 
@@ -75,6 +91,39 @@
 
     function sellNFT() {
         alert(`selling an NFT`);
+    }
+
+    async function requestService1() {
+        const signer = await provider.getSigner();
+        const erc721ContractWithSigner = erc721Contract.connect(signer);
+
+        await erc721ContractWithSigner.executePurchaseRight1();
+    }
+
+    async function requestService2() {
+        const signer = await provider.getSigner();
+        const erc721ContractWithSigner = erc721Contract.connect(signer);
+
+        await erc721ContractWithSigner.executePurchaseRight2();
+    }
+
+    async function transfer() {
+        const signer = await provider.getSigner();
+
+        erc721ToBeTransferredContract = await new ethers.Contract(
+            nftToBeTransferredAddress,
+            erc721ABI,
+            provider
+        );
+
+        erc721ToBeTransferredContractWithSigner =
+            erc721ToBeTransferredContract.connect(signer);
+
+        await erc721ToBeTransferredContractWithSigner.transferFrom(
+            account,
+            targetWallet,
+            nftToBeTransferredAddress
+        );
     }
 </script>
 
@@ -88,48 +137,67 @@
 </div>
 
 <p><br /></p>
-{#if purchaseRight1Status !== ""}
-    <h3>Your JPM Enterprise NFTs</h3>
 
-    <div class="list">
-        <table>
-            <tr>
-                <th> Artifact </th>
-                <th> Name </th>
-                <th> Purchase Right 1</th>
-                <th> Purchase Right 2 </th>
-                <th> Current Value</th>
-                <th> Sell NFT </th>
-            </tr>
-            <tr>
-                <td style="width: fit-content;">
-                    <img
-                        src="https://raw.githubusercontent.com/Enterprise-NFT/nft-artifacts/main/EnterpriseNFTLogo.png"
-                        width="40"
-                        height="40"
-                        alt=""
-                    />
-                </td>
-                <td> JPM Enterprise NFT </td>
-                <td>
-                    <br />
-                    {purchaseRight1Status} <br />
-                    <button on:click={requestService1}> Execute </button>
-                </td>
-                <td>
-                    <br />
-                    {purchaseRight2Status} <br />
-                    <button on:click={requestService2}> Execute </button>
-                </td>
+<h3>Your JPM Enterprise NFTs</h3>
+{#if ready}
+    {#each nftsUnderManagement as nftUnderManagement}
+        <div class="list">
+            <table>
+                <tr>
+                    <th> Artifact </th>
+                    <th> Name </th>
+                    <th> Purchase Right 1</th>
+                    <th> Purchase Right 2 </th>
+                    <th> Current Value</th>
+                    <th> Sell NFT </th>
+                </tr>
+                <tr>
+                    <td style="width: fit-content;">
+                        <img
+                            src="https://raw.githubusercontent.com/Enterprise-NFT/nft-artifacts/main/EnterpriseNFTLogo.png"
+                            width="40"
+                            height="40"
+                            alt=""
+                        />
+                    </td>
+                    <td> {nftUnderManagement.name} </td>
+                    <td>
+                        <br />
+                        {nftUnderManagement.purchaseRight1Status} <br />
+                        <button on:click={requestService1}> Execute </button>
+                    </td>
+                    <td>
+                        <br />
+                        {nftUnderManagement.purchaseRight2Status} <br />
+                        <button on:click={requestService2}> Execute </button>
+                    </td>
 
-                <td> 1 ETH </td>
+                    <td> 1 ETH </td>
 
-                <td>
-                    <button on:click={sellNFT}> Sell </button>
-                </td>
-            </tr>
-        </table>
-    </div>
+                    <td>
+                        <button on:click={sellNFT}> Sell </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    {/each}
+
+    <p><br /></p>
+    <p><br /></p>
+
+    <input
+        type="text"
+        bind:value={targetWallet}
+        placeholder="...enter target wallet"
+    />
+    <p><br /></p>
+    <input
+        type="text"
+        bind:value={nftToBeTransferredAddress}
+        placeholder="...enter nft address to be transferred"
+    />
+    <p><br /></p>
+    <button on:click={transfer}> Transfer Now </button>
 {/if}
 
 <style>

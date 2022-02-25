@@ -1,4 +1,4 @@
-export const erc721AllInOneABI = [
+export const erc721ABI = [
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
@@ -505,103 +505,13 @@ export const fiduciaryABI = [
 		"type": "event"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint8",
-				"name": "id",
-				"type": "uint8"
-			}
-		],
-		"name": "acceptOffer",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "nftAddress",
-				"type": "address"
-			}
-		],
-		"name": "consumeRights",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
-		"name": "getName",
+		"name": "getNFTsUnderManagement",
 		"outputs": [
 			{
-				"internalType": "string",
+				"internalType": "address[]",
 				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getOffers",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "status",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "note",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "offerPrice",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "relatedAsset",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "validUnitl",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct Fiduciary.offer[]",
-				"name": "",
-				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "nftAddress",
-				"type": "address"
-			}
-		],
-		"name": "getPurchaseStatus",
-		"outputs": [
-			{
-				"internalType": "enum Fiduciary.PurchaseStatus",
-				"name": "",
-				"type": "uint8"
+				"type": "address[]"
 			}
 		],
 		"stateMutability": "view",
@@ -724,64 +634,6 @@ export const fiduciaryABI = [
 			}
 		],
 		"name": "log",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"components": [
-					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "status",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "note",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "offerPrice",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "relatedAsset",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "validUnitl",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct Fiduciary.offer",
-				"name": "myOffer",
-				"type": "tuple"
-			}
-		],
-		"name": "makeOfferWith",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "nftAddress",
-				"type": "address"
-			}
-		],
-		"name": "registerNewNFT",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
