@@ -58,6 +58,12 @@
 
             nftUnderManagement.address = nftAddressUnderManagement;
             nftUnderManagement.name = await erc721Contract.name();
+            nftUnderManagement.owner = await erc721Contract.owner();
+
+            // const signer = await provider.getSigner();
+            // const erc721ContractWithSigner = erc721Contract.connect(signer);
+            // nftUnderManagement.owner = await erc721ContractWithSigner.owner();
+
             nftUnderManagement.purchaseRight1Status =
                 await erc721Contract.getPurchaseRight1Status();
 
@@ -119,10 +125,8 @@
         erc721ToBeTransferredContractWithSigner =
             erc721ToBeTransferredContract.connect(signer);
 
-        await erc721ToBeTransferredContractWithSigner.transferFrom(
-            account,
-            targetWallet,
-            nftToBeTransferredAddress
+        await erc721ToBeTransferredContractWithSigner.transferOwnership(
+            targetWallet
         );
     }
 </script>
@@ -138,7 +142,7 @@
 
 <p><br /></p>
 
-<h3>Your JPM Enterprise NFTs</h3>
+<h3>JPM Enterprise NFTs</h3>
 {#if ready}
     {#each nftsUnderManagement as nftUnderManagement}
         <div class="list">
@@ -148,8 +152,8 @@
                     <th> Name </th>
                     <th> Purchase Right 1</th>
                     <th> Purchase Right 2 </th>
-                    <th> Current Value</th>
-                    <th> Sell NFT </th>
+                    <th> Owner</th>
+                    <th> Action </th>
                 </tr>
                 <tr>
                     <td style="width: fit-content;">
@@ -172,10 +176,14 @@
                         <button on:click={requestService2}> Execute </button>
                     </td>
 
-                    <td> 1 ETH </td>
+                    <td> {nftUnderManagement.owner} </td>
 
                     <td>
-                        <button on:click={sellNFT}> Sell </button>
+                        {#if nftUnderManagement.owner === account}
+                            <button on:click={sellNFT}> Sell </button>
+                        {:else}
+                            <button on:click={sellNFT}> Make Offer </button>
+                        {/if}
                     </td>
                 </tr>
             </table>
