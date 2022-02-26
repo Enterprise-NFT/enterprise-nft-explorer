@@ -4,14 +4,20 @@
   import Title from "./components/Title.svelte";
 </script>
 
-<body>
-  <main transition:fade>
-    <Title />
-    <ERC721Dashboard />
-  </main>
-</body>
+<div>
+  <body>
+    <main transition:fade>
+      <Title />
+      <ERC721Dashboard />
+    </main>
+  </body>
+</div>
 
 <style>
+  div {
+    background-color: black;
+    background-size: cover;
+  }
   body {
     background-color: black;
     background-size: cover;
@@ -19,6 +25,8 @@
     margin-right: auto;
     width: 100%;
     min-width: 100%;
+    height: 100%;
+    min-height: 100%;
   }
   main {
     text-align: center;
