@@ -6,6 +6,7 @@ import "https://raw.githubusercontent.com/distributed-ledger-technology/solidity
 contract Fiduciary is Loggable {
     struct offer {
         address nftAddress;
+        address origin;
         uint256 bid;
     }
 
@@ -26,12 +27,12 @@ contract Fiduciary is Loggable {
         return nftsUnderManagement;
     }
 
-    function makeOffer(address nftAddress, uint256 bid) public payable {
+    function makeOffer(address nftAddress) public payable {
         // offer currentOffer = new offer(nftAddress, bid);
 
         // offer memory currentOffer = offer{nftAddress: nftAddress, bid: bid};
 
-        offer memory currentOffer = offer(nftAddress, bid);
+        offer memory currentOffer = offer(nftAddress, msg.sender, msg.value);
 
         offers.push(currentOffer);
 
@@ -43,7 +44,7 @@ contract Fiduciary is Loggable {
         // reinladen des NFTs
     }
 
-    function triggerExchange() {
+    function triggerExchange() internal {
         // transfer NFT Ownership from fiduciary sc to new owner
         // transfer offer price from fiduciary sc to NFT seller
     }
@@ -52,11 +53,11 @@ contract Fiduciary is Loggable {
         return offers;
     }
 
-    function claimOfferPriceBack() {
+    function claimOfferPriceBack() public {
         //
     }
 
-    function claimNFTBack() {
+    function claimNFTBack() public {
         //
     }
 }
