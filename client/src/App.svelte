@@ -1,6 +1,7 @@
 <script>
   import Connect from "./components/Connect.svelte";
   import ERC721Dashboard from "./components/ERC721Dashboard.svelte";
+  import YourEnterpriseNfTs from "./components/YourEnterpriseNFTs.svelte";
   import { registeredEnterprises } from "./master-data.ts";
 
   let account = "";
@@ -14,8 +15,8 @@
 
   {account} <br /> super
   {#if account !== ""}
-    {account} <br /> drin
-    <ERC721Dashboard {registeredEnterprises} {account} {provider} />
+    <YourEnterpriseNfTs {registeredEnterprises} {account} {provider} />
+    <!-- <ERC721Dashboard {registeredEnterprises} {account} {provider} /> -->
   {/if}
 </main>
 
