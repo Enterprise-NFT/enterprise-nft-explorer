@@ -5,8 +5,6 @@
     import { afterUpdate } from "svelte";
     import { onMount } from "svelte";
 
-    let fiduciaryContractAddress = "0x104F8EF85899E154425AA1CA3cCfB3032aeb5bc1";
-
     let erc721Contract;
     let erc721ContractWithSigner;
     let erc721ToBeTransferredContract;
