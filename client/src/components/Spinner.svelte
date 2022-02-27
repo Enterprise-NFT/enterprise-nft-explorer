@@ -10,12 +10,21 @@
     export let durationCenter: string = `${durationMultiplier * 3}s`;
 </script>
 
-<div
-    class="circle"
-    style="--size: {size}{unit}; --colorInner: {colorInner}; --colorCenter: {colorCenter}; --colorOuter: {colorOuter}; --durationInner: {durationInner}; --durationCenter: {durationCenter}; --durationOuter: {durationOuter};"
-/>
+<div class="spinner">
+    <div
+        class="circle"
+        style="--size: {size}{unit}; --colorInner: {colorInner}; --colorCenter: {colorCenter}; --colorOuter: {colorOuter}; --durationInner: {durationInner}; --durationCenter: {durationCenter}; --durationOuter: {durationOuter};"
+    />
+</div>
 
 <style>
+    .spinner {
+        text-align: center;
+        width: 3em;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 5vh;
+    }
     .circle {
         width: var(--size);
         height: var(--size);

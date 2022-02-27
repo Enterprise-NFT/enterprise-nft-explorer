@@ -5,30 +5,15 @@
     import Spinner from "./Spinner.svelte";
 
     export let registeredEnterprises;
+    export let account = "";
+    export let provider;
 
     let erc721Contract;
     let userOwnsAtLeastOne = false;
     let nftAddressesUnderManagement = [];
     let nftsUnderManagement = [];
     let ready = false;
-    let account = "";
-    let provider;
     let selected = {};
-
-    async function connectToBrowserWallet() {
-        if (typeof window.ethereum === "undefined") {
-            alert("You need to install a browserwallet like metamask.io.");
-        } else {
-            const accounts = await ethereum.request({
-                method: "eth_requestAccounts",
-            });
-            account = accounts[0];
-            provider = new ethers.providers.Web3Provider(
-                window.ethereum,
-                "any"
-            );
-        }
-    }
 
     async function getNFTInfos() {
         const fiduciarySmartContract = await new ethers.Contract(
@@ -109,19 +94,8 @@
 {/if}
 <p><br /></p>
 
-<div class="account">
-    {#if account !== ""}
-        You are logged in via the following browserwallet: <p />
-        {account}.
-    {:else}
-        <button on:click={connectToBrowserWallet}>Connect Browserwallet</button>
-    {/if}
-</div>
-
 {#if !ready && selected.name !== undefined}
-    <div class="spinner">
-        <Spinner />
-    </div>
+    <Spinner />
 {/if}
 
 {#if ready && userOwnsAtLeastOne}
@@ -217,19 +191,11 @@
 {/if}
 
 <style>
-    .list,
-    .account {
+    .list {
         padding-top: 2em;
         color: white;
     }
 
-    .spinner {
-        text-align: center;
-        width: 3em;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 5vh;
-    }
     h3 {
         color: turquoise;
         font-size: 40px;

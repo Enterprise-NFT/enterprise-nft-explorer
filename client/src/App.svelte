@@ -1,13 +1,22 @@
 <script>
+  import Connect from "./components/Connect.svelte";
   import ERC721Dashboard from "./components/ERC721Dashboard.svelte";
-
   import { registeredEnterprises } from "./master-data.ts";
+
+  let account = "";
+  let provider = "";
 </script>
 
 <main transition>
   <h1>Enterprise NFT Explorer</h1>
 
-  <ERC721Dashboard {registeredEnterprises} />
+  <Connect bind:account bind:provider />
+
+  {account} <br /> super
+  {#if account !== ""}
+    {account} <br /> drin
+    <ERC721Dashboard {registeredEnterprises} {account} {provider} />
+  {/if}
 </main>
 
 <style>
@@ -27,9 +36,6 @@
     padding-top: 0px;
   }
 
-  :global(html) {
-    position: absolute;
-  }
   :global(body) {
     /* this will apply to <body> */
     position: 0;
