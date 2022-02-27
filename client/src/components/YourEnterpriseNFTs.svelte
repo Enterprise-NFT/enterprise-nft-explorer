@@ -53,6 +53,7 @@
                     <th> Name </th>
                     <th> Development Service Purchase Right</th>
                     <th> Consulting Service Purchase Right </th>
+                    <th> Action </th>
                 </tr>
                 <tr>
                     <td style="width: fit-content;">
@@ -73,6 +74,10 @@
                         <br />
                         {nftUnderManagement.purchaseRight2Status} <br />
                         <button on:click={requestService2}> Execute </button>
+                    </td>
+                    <td>
+                        <br /> Highest Bid: 0.5 Ether <br />
+                        <button on:click={requestService2}> Accept </button>
                     </td>
                 </tr>
             </table>

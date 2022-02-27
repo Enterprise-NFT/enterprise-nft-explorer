@@ -41,7 +41,12 @@
         {nftsUnderManagement}
       />
 
-      <OtherEnterpriseNfTs {nftsUnderManagement} {account} />
+      <OtherEnterpriseNfTs
+        {account}
+        {provider}
+        {nftsUnderManagement}
+        {selected}
+      />
     {/if}
   {/if}
 </main>

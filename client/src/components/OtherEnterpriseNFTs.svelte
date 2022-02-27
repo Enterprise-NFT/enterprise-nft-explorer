@@ -1,8 +1,26 @@
 <script>
+    import { erc721ABI, fiduciaryABI } from "../abi-constants.ts";
+
     export let nftsUnderManagement = [];
     export let account = "";
+    export let selected;
+
+    let bid = 0;
+
     async function makeOffer() {
-        alert("tbd");
+        alert(`I'll make an offer about ${bid} Ether`);
+
+        const fiduciarySmartContract = await new ethers.Contract(
+            selected.fiduciaryContractAddress,
+            fiduciaryABI,
+            provider
+        );
+
+        const signer = await provider.getSigner();
+        const fiduciarySmartContractWithSigner =
+            fiduciarySmartContract.connect(signer);
+
+        await fiduciarySmartContractWithSigner.makeOffer();
     }
 </script>
 
@@ -38,6 +56,7 @@
                     <td> 0.5 Ether </td>
 
                     <td>
+                        <input type="number" bind:value={bid} /> <br />
                         <button on:click={makeOffer}> Make Offer </button>
                     </td>
                 </tr>
