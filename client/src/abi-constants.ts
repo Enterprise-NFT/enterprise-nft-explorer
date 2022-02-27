@@ -558,12 +558,44 @@ export const fiduciaryABI = [
 	},
 	{
 		"inputs": [],
+		"name": "acceptOffer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "getNFTsUnderManagement",
 		"outputs": [
 			{
 				"internalType": "address[]",
 				"name": "",
 				"type": "address[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getOffers",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "nftAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "bid",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct Fiduciary.offer[]",
+				"name": "",
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
@@ -686,6 +718,24 @@ export const fiduciaryABI = [
 			}
 		],
 		"name": "log",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "nftAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "bid",
+				"type": "uint256"
+			}
+		],
+		"name": "makeOffer",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

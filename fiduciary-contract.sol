@@ -12,9 +12,9 @@ contract Fiduciary is Loggable {
     offer[] offers;
 
     address[] nftsUnderManagement = [
-        0xb6d0bFc10F4a58E2d5Fd596127CDfb23Becad833,
-        0x40Da03fdD198FaE79D36B2a3e931856fc47A0EeE,
-        0xc16e757C261b5249bF801d5E2Ae76C05faC05fE4
+        0xf1bACa82543f5F3D934d610244974A836b673834,
+        0xd3cFBA277aAE616DA25F45bcC064e8465601bDeE,
+        0xc42159B2a7A68A389B2e555d94B020c2971D18Ad
     ];
 
     address[] allowedWalletAddressesForInitialBuying = [
@@ -26,7 +26,7 @@ contract Fiduciary is Loggable {
         return nftsUnderManagement;
     }
 
-    function makeOffer(address nftAddress, uint256 bid) public {
+    function makeOffer(address nftAddress, uint256 bid) public payable {
         // offer currentOffer = new offer(nftAddress, bid);
 
         // offer memory currentOffer = offer{nftAddress: nftAddress, bid: bid};
@@ -34,13 +34,29 @@ contract Fiduciary is Loggable {
         offer memory currentOffer = offer(nftAddress, bid);
 
         offers.push(currentOffer);
+
+        // reinladen der Kohle
     }
 
     function acceptOffer() public {
-        // transferOwnership
+        // transferOwnership from user wallet to fiduciary...
+        // reinladen des NFTs
+    }
+
+    function triggerExchange() {
+        // transfer NFT Ownership from fiduciary sc to new owner
+        // transfer offer price from fiduciary sc to NFT seller
     }
 
     function getOffers() public view returns (offer[] memory) {
         return offers;
+    }
+
+    function claimOfferPriceBack() {
+        //
+    }
+
+    function claimNFTBack() {
+        //
     }
 }
