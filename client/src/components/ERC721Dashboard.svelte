@@ -15,45 +15,6 @@
     let ready = false;
     let selected = {};
 
-    async function getNFTInfos() {
-        const fiduciarySmartContract = await new ethers.Contract(
-            selected.fiduciaryContractAddress,
-            fiduciaryABI,
-            provider
-        );
-
-        nftAddressesUnderManagement =
-            await fiduciarySmartContract.getNFTsUnderManagement();
-
-        for (const nftAddressUnderManagement of nftAddressesUnderManagement) {
-            let nftUnderManagement = {};
-            erc721Contract = await new ethers.Contract(
-                nftAddressUnderManagement,
-                erc721ABI,
-                provider
-            );
-
-            nftUnderManagement.address = nftAddressUnderManagement;
-            nftUnderManagement.name = await erc721Contract.name();
-            nftUnderManagement.owner = (
-                await erc721Contract.owner()
-            ).toLowerCase();
-
-            if (nftUnderManagement.owner === account) {
-                userOwnsAtLeastOne = true;
-            }
-
-            nftUnderManagement.purchaseRight1Status =
-                await erc721Contract.getPurchaseRight1Status();
-
-            nftUnderManagement.purchaseRight2Status =
-                await erc721Contract.getPurchaseRight2Status();
-
-            nftsUnderManagement.push(nftUnderManagement);
-        }
-        ready = true;
-    }
-
     onMount(async () => {
         setInterval(async () => {
             // getNFTInfos();
@@ -73,25 +34,8 @@
 
         await erc721ContractWithSigner.executePurchaseRight2();
     }
-
-    async function makeOffer() {
-        alert("tbd");
-    }
 </script>
 
-<p><br /></p>
-
-{#if account !== ""}
-    <h3>In which company are you interested in?</h3>
-    <!-- <select value={selected} on:change={() => getNFTInfos}> -->
-    <select bind:value={selected} on:change={getNFTInfos}>
-        {#each registeredEnterprises as registeredEnterprise}
-            <option value={registeredEnterprise}>
-                {registeredEnterprise.name}
-            </option>
-        {/each}
-    </select>
-{/if}
 <p><br /></p>
 
 {#if !ready && selected.name !== undefined}
@@ -146,46 +90,6 @@
 <p><br /></p>
 
 {#if ready}
-    <h3>JPM Enterprise NFTs</h3>
-    {#each nftsUnderManagement as nftUnderManagement}
-        {#if nftUnderManagement.owner !== account}
-            <div class="list">
-                <table>
-                    <tr>
-                        <th> Artifact </th>
-                        <th> Name </th>
-                        <th> Owner</th>
-                        <th> Highest Bid </th>
-                        <th> Action </th>
-                    </tr>
-                    <tr>
-                        <td style="width: fit-content;">
-                            <img
-                                src="https://raw.githubusercontent.com/Enterprise-NFT/nft-artifacts/main/EnterpriseNFTLogo.png"
-                                width="40"
-                                height="40"
-                                alt=""
-                            />
-                        </td>
-                        <td> {nftUnderManagement.name} </td>
-
-                        {#if nftUnderManagement.owner === account}
-                            <td> You </td>
-                        {:else}
-                            <td> {nftUnderManagement.owner} </td>
-                        {/if}
-
-                        <td> 0.5 Ether </td>
-
-                        <td>
-                            <button on:click={makeOffer}> Make Offer </button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        {/if}
-    {/each}
-
     <p><br /></p>
     <p><br /></p>
 {/if}

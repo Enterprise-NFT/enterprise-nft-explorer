@@ -1,11 +1,15 @@
 <script>
   import Connect from "./components/Connect.svelte";
   import ERC721Dashboard from "./components/ERC721Dashboard.svelte";
+  import OtherEnterpriseNfTs from "./components/OtherEnterpriseNFTs.svelte";
+  import SelectEnterprise from "./components/SelectEnterprise.svelte";
   import YourEnterpriseNfTs from "./components/YourEnterpriseNFTs.svelte";
   import { registeredEnterprises } from "./master-data.ts";
 
   let account = "";
   let provider = "";
+  let nftsUnderManagement = [];
+  let ready = false;
 </script>
 
 <main transition>
@@ -13,10 +17,25 @@
 
   <Connect bind:account bind:provider />
 
-  {account} <br /> super
   {#if account !== ""}
-    <YourEnterpriseNfTs {registeredEnterprises} {account} {provider} />
-    <!-- <ERC721Dashboard {registeredEnterprises} {account} {provider} /> -->
+    <SelectEnterprise
+      {registeredEnterprises}
+      {account}
+      {provider}
+      bind:nftsUnderManagement
+      bind:ready
+    />
+
+    {#if ready}
+      <YourEnterpriseNfTs
+        {registeredEnterprises}
+        {account}
+        {provider}
+        {nftsUnderManagement}
+      />
+
+      <OtherEnterpriseNfTs {nftsUnderManagement} {account} />
+    {/if}
   {/if}
 </main>
 
