@@ -3,7 +3,7 @@
     import { erc721ABI, fiduciaryABI } from "../abi-constants.ts";
 
     export let registeredEnterprises;
-    export let selected = {};
+    export let selected;
     export let account = "{}";
     export let provider;
     export let ready = false;

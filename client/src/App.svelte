@@ -3,6 +3,7 @@
   import ERC721Dashboard from "./components/ERC721Dashboard.svelte";
   import OtherEnterpriseNfTs from "./components/OtherEnterpriseNFTs.svelte";
   import SelectEnterprise from "./components/SelectEnterprise.svelte";
+  import Spinner from "./components/Spinner.svelte";
   import YourEnterpriseNfTs from "./components/YourEnterpriseNFTs.svelte";
   import { registeredEnterprises } from "./master-data.ts";
 
@@ -10,6 +11,7 @@
   let provider = "";
   let nftsUnderManagement = [];
   let ready = false;
+  let selected;
 </script>
 
 <main transition>
@@ -24,7 +26,12 @@
       {provider}
       bind:nftsUnderManagement
       bind:ready
+      bind:selected
     />
+
+    {#if !ready && selected !== undefined && selected.name !== ""}
+      <Spinner />
+    {/if}
 
     {#if ready}
       <YourEnterpriseNfTs
