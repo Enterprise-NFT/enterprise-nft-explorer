@@ -1,40 +1,19 @@
 <script>
     import { ethers } from "https://cdn.skypack.dev/ethers";
     import { erc721ABI, fiduciaryABI } from "../abi-constants.ts";
-
-    import { afterUpdate } from "svelte";
     import { onMount } from "svelte";
+    import Spinner from "./Spinner.svelte";
+
+    export let registeredEnterprises;
 
     let erc721Contract;
-    let erc721ContractWithSigner;
-    let erc721ToBeTransferredContract;
-    let erc721ToBeTransferredContractWithSigner;
-
-    let targetWallet;
-    let nftToBeTransferredAddress;
     let userOwnsAtLeastOne = false;
     let nftAddressesUnderManagement = [];
     let nftsUnderManagement = [];
     let ready = false;
-
     let account = "";
     let provider;
-    let selected = "";
-
-    let registeredEnterprises = [
-        { name: "", fiduciaryContractAddress: "" },
-        {
-            name: "Jan Patrick Michael Development (JPM Development)",
-            fiduciaryContractAddress:
-                "0x104F8EF85899E154425AA1CA3cCfB3032aeb5bc1",
-        },
-        { name: "Company 2 (Comp 2)", fiduciaryContractAddress: "" },
-        { name: "Company 3 (Comp 2)", fiduciaryContractAddress: "" },
-    ];
-
-    // afterUpdate(() => {
-    //     alert("hier");
-    // });
+    let selected = {};
 
     async function connectToBrowserWallet() {
         if (typeof window.ethereum === "undefined") {
@@ -48,8 +27,6 @@
                 window.ethereum,
                 "any"
             );
-
-            // await getNFTInfos();
         }
     }
 
@@ -80,9 +57,6 @@
             if (nftUnderManagement.owner === account) {
                 userOwnsAtLeastOne = true;
             }
-            // const signer = await provider.getSigner();
-            // const erc721ContractWithSigner = erc721Contract.connect(signer);
-            // nftUnderManagement.owner = await erc721ContractWithSigner.owner();
 
             nftUnderManagement.purchaseRight1Status =
                 await erc721Contract.getPurchaseRight1Status();
@@ -95,29 +69,11 @@
         ready = true;
     }
 
-    function refreshNFTData() {
-        // if (account !== "") {
-        //         purchaseRight1Status =
-        //             await erc721Contract.getPurchaseRight1Status();
-        //         purchaseRight2Status =
-        //             await erc721Contract.getPurchaseRight2Status();
-        //     }
-    }
     onMount(async () => {
-        // const result = ethers.Wallet.createRandom();
-        // console.log(result);
         setInterval(async () => {
-            refreshNFTData();
-        }, 3 * 1000);
+            // getNFTInfos();
+        }, 5 * 1000);
     });
-
-    function buyNFT() {
-        alert(`buying the NFT`);
-    }
-
-    function sellNFT() {
-        alert(`selling an NFT`);
-    }
 
     async function requestService1() {
         const signer = await provider.getSigner();
@@ -133,21 +89,8 @@
         await erc721ContractWithSigner.executePurchaseRight2();
     }
 
-    async function transfer() {
-        const signer = await provider.getSigner();
-
-        erc721ToBeTransferredContract = await new ethers.Contract(
-            nftToBeTransferredAddress,
-            erc721ABI,
-            provider
-        );
-
-        erc721ToBeTransferredContractWithSigner =
-            erc721ToBeTransferredContract.connect(signer);
-
-        await erc721ToBeTransferredContractWithSigner.transferOwnership(
-            targetWallet
-        );
+    async function makeOffer() {
+        alert("tbd");
     }
 </script>
 
@@ -174,6 +117,12 @@
         <button on:click={connectToBrowserWallet}>Connect Browserwallet</button>
     {/if}
 </div>
+
+{#if !ready && selected.name !== undefined}
+    <div class="spinner">
+        <Spinner />
+    </div>
+{/if}
 
 {#if ready && userOwnsAtLeastOne}
     <h3>Your JPM Enterprise NFTs</h3>
@@ -255,13 +204,7 @@
                         <td> 0.5 Ether </td>
 
                         <td>
-                            {#if nftUnderManagement.owner === account}
-                                <button on:click={sellNFT}>
-                                    List for Sale
-                                </button>
-                            {:else}
-                                <button on:click={sellNFT}> Make Offer </button>
-                            {/if}
+                            <button on:click={makeOffer}> Make Offer </button>
                         </td>
                     </tr>
                 </table>
@@ -278,6 +221,14 @@
     .account {
         padding-top: 2em;
         color: white;
+    }
+
+    .spinner {
+        text-align: center;
+        width: 3em;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 5vh;
     }
     h3 {
         color: turquoise;

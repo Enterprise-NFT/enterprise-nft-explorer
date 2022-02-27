@@ -1,34 +1,48 @@
 <script>
-  import { fade } from "svelte/transition";
   import ERC721Dashboard from "./components/ERC721Dashboard.svelte";
-  import Title from "./components/Title.svelte";
+
+  import { registeredEnterprises } from "./master-data.ts";
 </script>
 
-<div>
-  <body>
-    <main transition:fade>
-      <Title />
-      <ERC721Dashboard />
-    </main>
-  </body>
-</div>
+<main transition>
+  <h1>Enterprise NFT Explorer</h1>
+
+  <ERC721Dashboard {registeredEnterprises} />
+</main>
 
 <style>
-  div {
-    background-color: black;
-    background-size: cover;
+  h1 {
+    color: #40e0d0;
+    font-size: 60px;
+    font-weight: 300;
+    margin-top: 0px;
+    padding-top: 7vh;
   }
-  body {
+
+  main {
     background-color: black;
-    background-size: cover;
-    margin-left: 0 auto;
-    margin-right: auto;
-    width: 100%;
-    min-width: 100%;
+    text-align: center;
+    height: 2000px;
+    margin-top: 0px;
+    padding-top: 0px;
+  }
+
+  :global(html) {
+    position: absolute;
+  }
+  :global(body) {
+    /* this will apply to <body> */
+    position: 0;
+    position: relative;
+    margin-left: 0px;
+    padding-left: 0px;
+    margin-right: 0px;
+    padding-right: 0px;
+    margin-top: 0px;
+    padding-top: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
     height: 100%;
     min-height: 100%;
-  }
-  main {
-    text-align: center;
   }
 </style>
