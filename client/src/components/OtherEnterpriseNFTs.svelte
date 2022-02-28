@@ -20,11 +20,11 @@
             `I'll make an offer over ${offer.bid} Ether regarding ${offer.nftAddress}`
         );
 
-        const fiduciarySmartContract = await new ethers.Contract(
-            selected.fiduciaryContractAddress,
-            fiduciaryABI,
-            provider
-        );
+        // const fiduciarySmartContract = await new ethers.Contract(
+        //     selected.fiduciaryContractAddress,
+        //     fiduciaryABI,
+        //     provider
+        // );
 
         const signer = await provider.getSigner();
         // const fiduciarySmartContractWithSigner =
