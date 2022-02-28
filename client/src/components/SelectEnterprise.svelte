@@ -1,6 +1,6 @@
 <script>
     import { ethers } from "https://cdn.skypack.dev/ethers";
-    import { erc721ABI, fiduciaryABI } from "../abi-constants.ts";
+    import { erc721ABI } from "../abi-constants.ts";
 
     export let registeredEnterprises;
     export let selected;
@@ -11,17 +11,17 @@
 
     let nftAddressesUnderManagement = [];
     let erc721Contract;
-    let userOwnsAtLeastOne = false;
 
     async function getNFTInfos() {
-        const fiduciarySmartContract = await new ethers.Contract(
-            selected.fiduciaryContractAddress,
-            fiduciaryABI,
-            provider
-        );
+        // const fiduciarySmartContract = await new ethers.Contract(
+        //     selected.fiduciaryContractAddress,
+        //     fiduciaryABI,
+        //     provider
+        // );
 
         nftAddressesUnderManagement =
-            await fiduciarySmartContract.getNFTsUnderManagement();
+            // await fiduciarySmartContract.getNFTsUnderManagement();
+            ["0xfA8efB89b01efCEA9D27Af116c5153514216D130"];
 
         for (const nftAddressUnderManagement of nftAddressesUnderManagement) {
             let nftUnderManagement = {};
@@ -33,13 +33,9 @@
 
             nftUnderManagement.address = nftAddressUnderManagement;
             nftUnderManagement.name = await erc721Contract.name();
-            nftUnderManagement.owner = (
-                await erc721Contract.owner()
-            ).toLowerCase();
-
-            if (nftUnderManagement.owner === account) {
-                userOwnsAtLeastOne = true;
-            }
+            nftUnderManagement.highestOffer =
+                await erc721Contract.getHighestOffer();
+            nftUnderManagement.owner = await erc721Contract.owner();
 
             nftUnderManagement.purchaseRight1Status =
                 await erc721Contract.getPurchaseRight1Status();

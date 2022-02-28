@@ -1,7 +1,8 @@
 <script>
     import { ethers } from "https://cdn.skypack.dev/ethers";
 
-    import { erc721ABI, fiduciaryABI } from "../abi-constants.ts";
+    import { erc721ABI } from "../abi-constants.ts";
+    import { UnitConverter } from "https://deno.land/x/units/mod-ethereum-blockchain.ts";
 
     export let nftsUnderManagement = [];
     export let account = "";
@@ -17,26 +18,48 @@
     async function makeOffer(nftAddress) {
         offer.nftAddress = nftAddress;
 
+        const erc721Contract = await new ethers.Contract(
+            nftAddress,
+            erc721ABI,
+            provider
+        );
+
+        const ownerOfThisNFT = await erc721Contract.owner();
+
         const signer = await provider.getSigner();
+        const erc721ContractWithSigner = erc721Contract.connect(signer);
 
-        const tx = {
-            from: account,
-            to: depotContractAddress,
-            value: ethers.utils.parseEther(amount.toString()),
-            gasLimit: 3000000,
-            gasPrice: gasPrice,
+        const options = {
+            value: ethers.utils.parseEther(offer.bid.toString()),
         };
+        await erc721ContractWithSigner.makeOffer(options);
 
-        signer.sendTransaction(tx).then((transaction) => {
-            console.dir(transaction);
-            alert("Send finished!");
-        });
+        // const signer = await provider.getSigner();
+        // const gasPrice = await provider.getGasPrice();
+
+        // const offerAmountInWei = UnitConverter.convert(
+        //     "Ether",
+        //     offer.bid,
+        //     "Wei"
+        // );
+        // const tx = {
+        //     from: account,
+        //     to: nftAddress,
+        //     value: ethers.utils.parseEther(offer.bid.toString()),
+        //     gasLimit: 3000000,
+        //     gasPrice: gasPrice,
+        // };
+
+        // signer.makeOffer(tx).then((transaction) => {
+        //     console.dir(transaction);
+        //     alert("Send finished!");
+        // });
     }
 </script>
 
 <h3>JPM Enterprise NFTs</h3>
 {#each nftsUnderManagement as nftUnderManagement}
-    {#if nftUnderManagement.owner !== account}
+    {#if nftUnderManagement.owner.toLowerCase() !== account}
         <div class="list">
             <table>
                 <tr>
@@ -63,8 +86,13 @@
                         <td> {nftUnderManagement.owner} </td>
                     {/if}
 
-                    <td> 0.5 Ether </td>
-
+                    <td>
+                        {UnitConverter.convert(
+                            "Wei",
+                            nftUnderManagement.highestOffer.amount,
+                            "Ether"
+                        )} Ether
+                    </td>
                     <td>
                         <input type="number" bind:value={offer.bid} /> <br />
                         <button

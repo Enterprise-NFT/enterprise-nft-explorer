@@ -4,6 +4,7 @@ pragma solidity ^0.8.2;
 import "https://raw.githubusercontent.com/OpenZeppelin/openzeppelin-contracts/v4.5.0/contracts/token/ERC721/ERC721.sol";
 import "https://raw.githubusercontent.com/OpenZeppelin/openzeppelin-contracts/v4.5.0/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "https://raw.githubusercontent.com/OpenZeppelin/openzeppelin-contracts/v4.5.0/contracts/access/Ownable.sol";
+import "https://raw.githubusercontent.com/distributed-ledger-technology/solidity-logger/main/src/logger.sol";
 
 contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
     string purchaseRight1Status = "available";
@@ -14,6 +15,7 @@ contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
     struct offer {
         address payable from;
         uint256 amount;
+        bool obsolete;
     }
 
     offer[] offers;
@@ -36,18 +38,31 @@ contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
         return purchaseRight2Status;
     }
 
-    function makeOffer() external payable {
-        offer memory highestOffer = this.getHighestOffer();
-        require(msg.value > highestOffer.amount);
+    function makeOffer() public payable {
+        // require(msg.value > 5000000000000000000000);
 
-        offers.push(offer(payable(msg.sender), msg.value));
+        if (offers.length > 0) {
+            offer memory highestOffer = this.getHighestOffer();
+            require(msg.value > highestOffer.amount);
+        } else {
+            require(msg.value > 0);
+        }
+
+        offers.push(offer(payable(msg.sender), msg.value, false));
+    }
+
+    function getOffers() public view returns (offer[] memory) {
+        return offers;
     }
 
     function getHighestOffer() public view returns (offer memory) {
         uint256 i = 0;
         offer memory highestOffer = offers[i];
         for (i; i < offers.length; i++) {
-            if (highestOffer.amount < offers[i].amount) {
+            if (
+                highestOffer.amount < offers[i].amount &&
+                offers[i].obsolete == false
+            ) {
                 highestOffer = offers[i];
             }
         }
@@ -61,7 +76,13 @@ contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
 
         this.transferOwnership(highestOffer.from); // transfers the NFT
 
-        // tbd delete the entry from offers array
+        uint256 i = 0;
+
+        for (i; i < offers.length; i++) {
+            if (offers[i].from == msg.sender && offers[i].obsolete == false) {
+                offers[i].obsolete = true;
+            }
+        }
     }
 
     function claimOfferAmountBack() public {
@@ -69,13 +90,12 @@ contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
         uint256 amountToBeSentBack = 0;
 
         for (i; i < offers.length; i++) {
-            if (offers[i].from == msg.sender) {
+            if (offers[i].from == msg.sender && offers[i].obsolete == false) {
                 amountToBeSentBack += offers[i].amount;
+                offers[i].obsolete = true;
             }
         }
         payable(msg.sender).transfer(amountToBeSentBack); // transfers the money of the other offers back
-
-        // tbd delete the entry from offers array
     }
 
     function tokenURI(uint256 tokenId)

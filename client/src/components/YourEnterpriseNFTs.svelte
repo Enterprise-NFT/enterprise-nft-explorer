@@ -1,8 +1,9 @@
 <script>
     import { ethers } from "https://cdn.skypack.dev/ethers";
-    import { erc721ABI, fiduciaryABI } from "../abi-constants.ts";
+    import { erc721ABI } from "../abi-constants.ts";
     import { onMount } from "svelte";
     import Spinner from "./Spinner.svelte";
+    import { UnitConverter } from "https://deno.land/x/units/mod-ethereum-blockchain.ts";
 
     export let account = "";
     export let provider;
@@ -33,6 +34,27 @@
 
         await erc721ContractWithSigner.executePurchaseRight2();
     }
+
+    async function acceptOffer(nftAddress) {
+        erc721Contract = await new ethers.Contract(
+            nftAddress,
+            erc721ABI,
+            provider
+        );
+
+        const ownerOfThisNFT = await erc721Contract.owner();
+
+        const signer = await provider.getSigner();
+        const erc721ContractWithSigner = erc721Contract.connect(signer);
+
+        // const ownerFormatted = web3.utils.toChecksumAddress(ownerOfThisNFT);
+        const ownerFormatted = ethers.utils.getAddress(ownerOfThisNFT);
+
+        // alert(
+        //     `I'll accept the highest offer for ${nftAddress} - the owner is: ${ownerOfThisNFT} - ${ownerFormatted}`
+        // );
+        await erc721ContractWithSigner.acceptHighestOffer();
+    }
 </script>
 
 <p><br /></p>
@@ -45,7 +67,7 @@
 
 <h3>Your JPM Enterprise NFTs</h3>
 {#each nftsUnderManagement as nftUnderManagement}
-    {#if nftUnderManagement.owner === account}
+    {#if nftUnderManagement.owner.toLowerCase() === account}
         <div class="list">
             <table>
                 <tr>
@@ -76,8 +98,21 @@
                         <button on:click={requestService2}> Execute </button>
                     </td>
                     <td>
-                        <br /> Highest Bid: 0.5 Ether <br />
-                        <button on:click={requestService2}> Accept </button>
+                        <br /> Highest Bid: {UnitConverter.convert(
+                            "Wei",
+                            nftUnderManagement.highestOffer.amount,
+                            "Ether"
+                        )} Ether
+                        <br />
+                        {#if nftUnderManagement.highestOffer.amount > 0.0000000001}
+                            <button
+                                on:click={acceptOffer(
+                                    nftUnderManagement.address
+                                )}
+                            >
+                                Accept
+                            </button>
+                        {/if}
                     </td>
                 </tr>
             </table>
