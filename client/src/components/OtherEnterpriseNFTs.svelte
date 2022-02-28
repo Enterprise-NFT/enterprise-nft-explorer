@@ -16,29 +16,21 @@
 
     async function makeOffer(nftAddress) {
         offer.nftAddress = nftAddress;
-        alert(
-            `I'll make an offer over ${offer.bid} Ether regarding ${offer.nftAddress}`
-        );
-
-        // const fiduciarySmartContract = await new ethers.Contract(
-        //     selected.fiduciaryContractAddress,
-        //     fiduciaryABI,
-        //     provider
-        // );
 
         const signer = await provider.getSigner();
-        // const fiduciarySmartContractWithSigner =
-        //     fiduciarySmartContract.connect(signer);
 
-        // await fiduciarySmartContractWithSigner.makeOffer();
+        const tx = {
+            from: account,
+            to: depotContractAddress,
+            value: ethers.utils.parseEther(amount.toString()),
+            gasLimit: 3000000,
+            gasPrice: gasPrice,
+        };
 
-        const tx = signer.sendTransaction({
-            to: selected.fiduciaryContractAddress,
-            // data: offer.nftAddress,
-            value: ethers.utils.parseEther(offer.bid.toString()).toString(),
+        signer.sendTransaction(tx).then((transaction) => {
+            console.dir(transaction);
+            alert("Send finished!");
         });
-
-        console.log(tx);
     }
 </script>
 
