@@ -9,7 +9,16 @@ contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
     string purchaseRight1Status = "available";
     string purchaseRight2Status = "available";
 
-    constructor() ERC721("JPM Development NFT 1", "JPMNFT1") {}
+    // mapping(address => uint) offers;
+
+    struct offer {
+        address payable from;
+        uint256 amount;
+    }
+
+    offer[] offers;
+
+    constructor() ERC721("JPM Development NFT 3", "JPMNFT3") {}
 
     function executePurchaseRight1() public {
         purchaseRight1Status = "consumed";
@@ -25,6 +34,48 @@ contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
 
     function getPurchaseRight2Status() public view returns (string memory) {
         return purchaseRight2Status;
+    }
+
+    function makeOffer() external payable {
+        offer memory highestOffer = this.getHighestOffer();
+        require(msg.value > highestOffer.amount);
+
+        offers.push(offer(payable(msg.sender), msg.value));
+    }
+
+    function getHighestOffer() public view returns (offer memory) {
+        uint256 i = 0;
+        offer memory highestOffer = offers[i];
+        for (i; i < offers.length; i++) {
+            if (highestOffer.amount < offers[i].amount) {
+                highestOffer = offers[i];
+            }
+        }
+        return highestOffer;
+    }
+
+    function acceptHighestOffer() external {
+        offer memory highestOffer = this.getHighestOffer();
+
+        payable(this.owner()).transfer(highestOffer.amount); // transfers the money of the highest offer to the seller
+
+        this.transferOwnership(highestOffer.from); // transfers the NFT
+
+        // tbd delete the entry from offers array
+    }
+
+    function claimOfferAmountBack() public {
+        uint256 i = 0;
+        uint256 amountToBeSentBack = 0;
+
+        for (i; i < offers.length; i++) {
+            if (offers[i].from == msg.sender) {
+                amountToBeSentBack += offers[i].amount;
+            }
+        }
+        payable(msg.sender).transfer(amountToBeSentBack); // transfers the money of the other offers back
+
+        // tbd delete the entry from offers array
     }
 
     function tokenURI(uint256 tokenId)

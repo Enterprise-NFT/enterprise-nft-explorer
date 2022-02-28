@@ -1,6 +1,5 @@
 <script>
   import Connect from "./components/Connect.svelte";
-  import Deposit from "./components/Deposit.svelte";
   import OtherEnterpriseNfTs from "./components/OtherEnterpriseNFTs.svelte";
   import SelectEnterprise from "./components/SelectEnterprise.svelte";
   import Spinner from "./components/Spinner.svelte";
@@ -29,9 +28,7 @@
       bind:selected
     />
 
-    <Deposit {account} {provider} />
-
-    <!-- {#if !ready && selected !== undefined && selected.name !== ""}
+    {#if !ready && selected !== undefined && selected.name !== ""}
       <Spinner />
     {/if}
 
@@ -49,7 +46,7 @@
         {nftsUnderManagement}
         {selected}
       />
-    {/if} -->
+    {/if}
   {/if}
 </main>
 
