@@ -53,17 +53,23 @@
     }
 </script>
 
-{#if account !== ""}
-    <h3>In which company are you interested in?</h3>
-    <!-- <select value={selected} on:change={() => getNFTInfos}> -->
-    <select bind:value={selected} on:change={getNFTInfos}>
-        {#each registeredEnterprises as registeredEnterprise}
-            <option value={registeredEnterprise}>
-                {registeredEnterprise.name}
-            </option>
-        {/each}
-    </select>
-{/if}
+<div class="selectMenu">
+    {#if account !== ""}
+        <h4>In which company are you interested in?</h4>
+        <!-- <select value={selected} on:change={() => getNFTInfos}> -->
+        <select bind:value={selected} on:change={getNFTInfos}>
+            {#each registeredEnterprises as registeredEnterprise}
+                <option value={registeredEnterprise}>
+                    {registeredEnterprise.name}
+                </option>
+            {/each}
+        </select>
+    {/if}
+</div>
 
 <style>
+    .selectMenu {
+        padding-top: 3vh;
+        color: white;
+    }
 </style>

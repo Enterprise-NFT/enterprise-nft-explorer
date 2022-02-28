@@ -1,14 +1,24 @@
 <script>
+    import { ethers } from "https://cdn.skypack.dev/ethers";
+
     import { erc721ABI, fiduciaryABI } from "../abi-constants.ts";
 
     export let nftsUnderManagement = [];
     export let account = "";
     export let selected;
+    export let provider;
 
-    let bid = 0;
+    let offer = {
+        nftAddress: "",
+        bid: 0,
+    };
+    // let bid = 0;
 
-    async function makeOffer() {
-        alert(`I'll make an offer about ${bid} Ether`);
+    async function makeOffer(nftAddress) {
+        offer.nftAddress = nftAddress;
+        alert(
+            `I'll make an offer over ${offer.bid} Ether regarding ${offer.nftAddress}`
+        );
 
         const fiduciarySmartContract = await new ethers.Contract(
             selected.fiduciaryContractAddress,
@@ -17,10 +27,18 @@
         );
 
         const signer = await provider.getSigner();
-        const fiduciarySmartContractWithSigner =
-            fiduciarySmartContract.connect(signer);
+        // const fiduciarySmartContractWithSigner =
+        //     fiduciarySmartContract.connect(signer);
 
-        await fiduciarySmartContractWithSigner.makeOffer();
+        // await fiduciarySmartContractWithSigner.makeOffer();
+
+        const tx = signer.sendTransaction({
+            to: selected.fiduciaryContractAddress,
+            // data: offer.nftAddress,
+            value: ethers.utils.parseEther(offer.bid.toString()).toString(),
+        });
+
+        console.log(tx);
     }
 </script>
 
@@ -56,8 +74,12 @@
                     <td> 0.5 Ether </td>
 
                     <td>
-                        <input type="number" bind:value={bid} /> <br />
-                        <button on:click={makeOffer}> Make Offer </button>
+                        <input type="number" bind:value={offer.bid} /> <br />
+                        <button
+                            on:click={makeOffer(nftUnderManagement.address)}
+                        >
+                            Make Offer
+                        </button>
                     </td>
                 </tr>
             </table>

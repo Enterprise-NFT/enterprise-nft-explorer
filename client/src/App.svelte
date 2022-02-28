@@ -1,6 +1,5 @@
 <script>
   import Connect from "./components/Connect.svelte";
-  import ERC721Dashboard from "./components/ERC721Dashboard.svelte";
   import OtherEnterpriseNfTs from "./components/OtherEnterpriseNFTs.svelte";
   import SelectEnterprise from "./components/SelectEnterprise.svelte";
   import Spinner from "./components/Spinner.svelte";
