@@ -1,5 +1,6 @@
 <script>
     import { ethers } from "https://cdn.skypack.dev/ethers";
+    import { MaterialApp, Button } from "svelte-materialify";
 
     let targetWallet = "";
     let nftToBeTransferredAddress = "";
