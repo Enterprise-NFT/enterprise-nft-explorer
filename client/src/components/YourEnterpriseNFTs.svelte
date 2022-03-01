@@ -10,8 +10,6 @@
     export let nftsUnderManagement = [];
 
     let erc721Contract;
-    let userOwnsAtLeastOne = false;
-    let nftAddressesUnderManagement = [];
     let ready = false;
     let selected = {};
 
@@ -47,12 +45,8 @@
         const signer = await provider.getSigner();
         const erc721ContractWithSigner = erc721Contract.connect(signer);
 
-        // const ownerFormatted = web3.utils.toChecksumAddress(ownerOfThisNFT);
         const ownerFormatted = ethers.utils.getAddress(ownerOfThisNFT);
 
-        // alert(
-        //     `I'll accept the highest offer for ${nftAddress} - the owner is: ${ownerOfThisNFT} - ${ownerFormatted}`
-        // );
         await erc721ContractWithSigner.acceptHighestOffer();
     }
 </script>
