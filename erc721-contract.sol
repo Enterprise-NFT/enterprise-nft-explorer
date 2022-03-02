@@ -9,7 +9,11 @@ import "https://raw.githubusercontent.com/distributed-ledger-technology/solidity
 contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
     string purchaseRight1Status = "available";
     string purchaseRight2Status = "available";
-    address[] developerWallets = [0xaACF20b4dA001B1A82B2BD0De43aC06DA4946c01];
+    address[] developerWallets = [
+        0xA3e517ce340188D7Cdb541b7ad926d3273913EEE,
+        0x72F921aBE283277bCeB62D9AD3780aB50aA591dF,
+        0x01BdfE2735d0E4f599e271528cf3c4B67455aa98
+    ];
     // mapping(address => uint) offers;
 
     struct offer {
