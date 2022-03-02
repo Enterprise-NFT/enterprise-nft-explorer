@@ -9,7 +9,7 @@ import "https://raw.githubusercontent.com/distributed-ledger-technology/solidity
 contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
     string purchaseRight1Status = "available";
     string purchaseRight2Status = "available";
-
+    address[] developerWallets = [0xaACF20b4dA001B1A82B2BD0De43aC06DA4946c01];
     // mapping(address => uint) offers;
 
     struct offer {
@@ -72,7 +72,11 @@ contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
     function acceptHighestOffer() external {
         offer memory highestOffer = this.getHighestOffer();
 
-        payable(this.owner()).transfer(highestOffer.amount); // transfers the money of the highest offer to the seller
+        uint256 transferredReward = rewardDevelopersAndOperators(
+            highestOffer.amount * 0.01
+        );
+
+        payable(this.owner()).transfer(highestOffer.amount - transferredReward); // transfers the money of the highest offer to the seller
 
         this.transferOwnership(highestOffer.from); // transfers the NFT
 
@@ -83,6 +87,22 @@ contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
                 offers[i].obsolete = true;
             }
         }
+    }
+
+    function rewardDevelopersAndOperators(uint256 amount)
+        public
+        returns (uint256)
+    {
+        uint256 j = 0;
+        uint256 individualReward = amount / developerWallets.length;
+        uint256 transferredReward;
+
+        for (j; j < developerWallets.length; j++) {
+            developerWallets[j].transfer(individualReward);
+            transferredReward += individualReward;
+        }
+
+        return transferredReward;
     }
 
     function claimOfferAmountBack() public {
