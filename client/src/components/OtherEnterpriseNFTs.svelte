@@ -1,25 +1,22 @@
 <script>
     import { ethers } from "https://cdn.skypack.dev/ethers";
-
     import { erc721ABI } from "../abi-constants.ts";
     import { UnitConverter } from "https://deno.land/x/units/mod-ethereum-blockchain.ts";
+    import Details from "./Details.svelte";
 
     export let nftsUnderManagement = [];
     export let account = "";
-    export let selected;
     export let provider;
+    export let offerTransactionLink = "";
 
-    let offer = {
-        nftAddress: "",
-        bid: 0,
-    };
-    // let bid = 0;
+    function showDetails(index) {
+        nftsUnderManagement[index].showDetails =
+            !nftsUnderManagement[index].showDetails;
+    }
 
-    async function makeOffer(nftAddress) {
-        offer.nftAddress = nftAddress;
-
+    async function makeOffer(nftUnderManagement) {
         const erc721Contract = await new ethers.Contract(
-            nftAddress,
+            nftUnderManagement.address,
             erc721ABI,
             provider
         );
@@ -30,9 +27,11 @@
         const erc721ContractWithSigner = erc721Contract.connect(signer);
 
         const options = {
-            value: ethers.utils.parseEther(offer.bid.toString()),
+            value: ethers.utils.parseEther(nftUnderManagement.bid.toString()),
         };
-        await erc721ContractWithSigner.makeOffer(options);
+        const result = await erc721ContractWithSigner.makeOffer(options);
+        console.log(`result: ${JSON.stringify(result)}`);
+        offerTransactionLink = `https://ropsten.etherscan.io/tx/${result.hash}`;
 
         // const signer = await provider.getSigner();
         // const gasPrice = await provider.getGasPrice();
@@ -58,16 +57,28 @@
 </script>
 
 <h3>JPM Enterprise NFTs</h3>
-{#each nftsUnderManagement as nftUnderManagement}
+{#if offerTransactionLink !== ""}
+    <p>
+        Please check the <a href={offerTransactionLink} target="_blank"
+            >status of your offer on the Ethereum Blockchain</a
+        >
+    </p>
+{/if}
+
+{#each nftsUnderManagement as nftUnderManagement, index}
     {#if nftUnderManagement.owner.toLowerCase() !== account}
-        <div class="list">
+        <div
+            class="list"
+            on:click={() => showDetails(index)}
+            style="cursor: pointer;"
+        >
             <table>
                 <tr>
                     <th> Artifact </th>
                     <th> Name </th>
                     <th> Owner</th>
                     <th> Highest Bid </th>
-                    <th> Action </th>
+                    <th> Your Bid </th>
                 </tr>
                 <tr>
                     <td style="width: fit-content;">
@@ -94,15 +105,24 @@
                         )} Ether
                     </td>
                     <td>
-                        <input type="number" bind:value={offer.bid} /> <br />
-                        <button
-                            on:click={makeOffer(nftUnderManagement.address)}
-                        >
-                            Make Offer
-                        </button>
+                        <input
+                            type="number"
+                            bind:value={nftUnderManagement.bid}
+                            placeholder="... enter your offer"
+                        /> <br />
+
+                        {#if nftUnderManagement.bid > 0}
+                            <button on:click={makeOffer(nftUnderManagement)}>
+                                Make Offer
+                            </button>
+                        {/if}
                     </td>
                 </tr>
             </table>
+
+            {#if nftsUnderManagement[index].showDetails}
+                <Details bind:nftOfInterest={nftUnderManagement} />
+            {/if}
         </div>
     {/if}
 {/each}
@@ -134,5 +154,9 @@
         margin-bottom: 1em;
         margin-left: 1em;
         margin-right: 1em;
+    }
+
+    p {
+        color: white;
     }
 </style>

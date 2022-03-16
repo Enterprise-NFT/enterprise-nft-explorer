@@ -6,16 +6,9 @@ import "https://raw.githubusercontent.com/OpenZeppelin/openzeppelin-contracts/v4
 import "https://raw.githubusercontent.com/OpenZeppelin/openzeppelin-contracts/v4.5.0/contracts/access/Ownable.sol";
 import "https://raw.githubusercontent.com/distributed-ledger-technology/solidity-logger/main/src/logger.sol";
 
-contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
+contract MaxiMotionNFT is ERC721, ERC721URIStorage, Ownable {
     string purchaseRight1Status = "available";
     string purchaseRight2Status = "available";
-    address[] developerWallets = [
-        0xA3e517ce340188D7Cdb541b7ad926d3273913EEE,
-        0x72F921aBE283277bCeB62D9AD3780aB50aA591dF,
-        0x01BdfE2735d0E4f599e271528cf3c4B67455aa98
-    ];
-
-    // mapping(address => uint) offers;
 
     struct offer {
         address payable from;
@@ -25,7 +18,7 @@ contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
 
     offer[] offers;
 
-    constructor() ERC721("JPM Development NFT 3", "JPMNFT3") {}
+    constructor() ERC721("MaxiMotion NFT 2", "MXMNFT2") {}
 
     function executePurchaseRight1() public {
         purchaseRight1Status = "consumed";
@@ -41,6 +34,17 @@ contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
 
     function getPurchaseRight2Status() public view returns (string memory) {
         return purchaseRight2Status;
+    }
+
+    function addToExistingOffer() public payable {
+        // require(msg.value > 5000000000000000000000);
+
+        uint256 i = 0;
+        for (i; i < offers.length; i++) {
+            if (offers[i].from == msg.sender && offers[i].obsolete == false) {
+                offers[i].amount = offers[i].amount + msg.value;
+            }
+        }
     }
 
     function makeOffer() public payable {
@@ -62,6 +66,14 @@ contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
 
     function getHighestOffer() public view returns (offer memory) {
         uint256 i = 0;
+        if (offers.length < 1) {
+            return
+                offer(
+                    payable(0x68E40cb2809eCDb3Ae3CC3c0363BcAFDf4583431),
+                    0,
+                    false
+                );
+        }
         offer memory highestOffer = offers[i];
         for (i; i < offers.length; i++) {
             if (
@@ -77,50 +89,40 @@ contract JPMEnterpriseNFT is ERC721, ERC721URIStorage, Ownable {
     function acceptHighestOffer() external {
         offer memory highestOffer = this.getHighestOffer();
 
-        uint256 transferredReward = rewardDevelopersAndOperators(
-            highestOffer.amount * 0.01
-        );
+        payable(this.owner()).transfer(highestOffer.amount); // transfers the money of the highest offer to the seller
 
-        payable(this.owner()).transfer(highestOffer.amount - transferredReward); // transfers the money of the highest offer to the seller
+        transferOwnership(highestOffer.from); // transfers the NFT to the buyer
 
-        this.transferOwnership(highestOffer.from); // transfers the NFT
+        // experimental: return other offer amounts - how much would this cost
 
         uint256 i = 0;
 
         for (i; i < offers.length; i++) {
-            if (offers[i].from == msg.sender && offers[i].obsolete == false) {
+            if (
+                offers[i].amount == highestOffer.amount &&
+                offers[i].obsolete == false
+            ) {
                 offers[i].obsolete = true;
             }
         }
-    }
-
-    function rewardDevelopersAndOperators(uint256 amount)
-        public
-        returns (uint256)
-    {
-        uint256 j = 0;
-        uint256 individualReward = amount / developerWallets.length;
-        uint256 transferredReward;
-
-        for (j; j < developerWallets.length; j++) {
-            developerWallets[j].transfer(individualReward);
-            transferredReward += individualReward;
-        }
-
-        return transferredReward;
     }
 
     function claimOfferAmountBack() public {
         uint256 i = 0;
         uint256 amountToBeSentBack = 0;
+        offer memory highestOffer = this.getHighestOffer();
 
         for (i; i < offers.length; i++) {
-            if (offers[i].from == msg.sender && offers[i].obsolete == false) {
+            if (
+                offers[i].from == msg.sender &&
+                offers[i].obsolete == false &&
+                offers[i].amount < highestOffer.amount
+            ) {
                 amountToBeSentBack += offers[i].amount;
                 offers[i].obsolete = true;
             }
         }
-        payable(msg.sender).transfer(amountToBeSentBack); // transfers the money of the other offers back
+        payable(msg.sender).transfer(amountToBeSentBack); // transfers the money back
     }
 
     function tokenURI(uint256 tokenId)

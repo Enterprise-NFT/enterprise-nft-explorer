@@ -8,6 +8,7 @@
 
   let account = "";
   let provider = "";
+  let myOffers;
   let nftsUnderManagement = [];
   let ready = false;
   let selected;
@@ -26,6 +27,7 @@
       bind:nftsUnderManagement
       bind:ready
       bind:selected
+      bind:myOffers
     />
 
     {#if !ready && selected !== undefined && selected.name !== ""}
