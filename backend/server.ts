@@ -17,10 +17,8 @@ const port = Deno.args[0]
 
 if (Deno.args[0] === '443') {
 
-    const cert = await Deno.readTextFile(`/etc/letsencrypt/live/openforce.de/fullchain.pem`)
-    const key = await Deno.readTextFile(`/etc/letsencrypt/live/openforce.de/privkey.pem`)
-    console.log(cert.length)
-    console.log(key.length)
+    // const cert = await Deno.readTextFile(`/etc/letsencrypt/live/openforce.de/fullchain.pem`)
+    // const key = await Deno.readTextFile(`/etc/letsencrypt/live/openforce.de/privkey.pem`)
 
     const options = {
         port: Number(Deno.args[0]),
