@@ -23,7 +23,7 @@
 <div class="account">
     {#if account !== ""}
         You are logged in via the following browserwallet: <p />
-        {account}.
+        {account} <br />on chainID {provider.provider.chainId}.
     {:else}
         <button on:click={connectToBrowserWallet}>Connect Browserwallet</button>
     {/if}
