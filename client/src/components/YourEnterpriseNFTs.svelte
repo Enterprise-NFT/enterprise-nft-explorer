@@ -2,18 +2,23 @@
     import { ethers } from "https://cdn.skypack.dev/ethers";
     import { erc721ABI } from "../abi-constants.ts";
     import { onMount } from "svelte";
-    import Spinner from "./Spinner.svelte";
     import { UnitConverter } from "https://deno.land/x/units/mod-ethereum-blockchain.ts";
 
     export let account = "";
     export let provider;
     export let nftsUnderManagement = [];
+    export let myNFTsUnderManagement = [];
+    export let selectedEnterprise;
 
     let erc721Contract;
     let ready = false;
-    let selected = {};
 
     onMount(async () => {
+        for (const nft of nftsUnderManagement) {
+            if (nft.owner.toLowerCase() === account) {
+                myNFTsUnderManagement.push(nft);
+            }
+        }
         setInterval(async () => {
             // getNFTInfos();
         }, 5 * 1000);
@@ -53,15 +58,10 @@
 
 <p><br /></p>
 
-<p><br /></p>
-
-{#if !ready && selected.name !== undefined}
-    <Spinner />
-{/if}
-
-<h3>Your JPM Enterprise NFTs</h3>
-{#each nftsUnderManagement as nftUnderManagement}
-    {#if nftUnderManagement.owner.toLowerCase() === account}
+{#if myNFTsUnderManagement.length > 0}
+    <p><br /></p>
+    <h3>Your {selectedEnterprise.name} NFTs</h3>
+    {#each myNFTsUnderManagement as nftUnderManagement}
         <div class="list">
             <table>
                 <tr>
@@ -111,8 +111,8 @@
                 </tr>
             </table>
         </div>
-    {/if}
-{/each}
+    {/each}
+{/if}
 
 <p><br /></p>
 <p><br /></p>
@@ -121,7 +121,6 @@
 <style>
     .list {
         padding-top: 2em;
-        color: white;
     }
 
     h3 {

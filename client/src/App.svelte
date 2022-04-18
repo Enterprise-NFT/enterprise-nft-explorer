@@ -10,8 +10,8 @@
   let provider = "";
   let myOffers;
   let nftsUnderManagement = [];
-  let ready = false;
-  let selected;
+  let mode = "";
+  let selectedEnterprise = {};
 </script>
 
 <main transition>
@@ -25,28 +25,30 @@
       {account}
       {provider}
       bind:nftsUnderManagement
-      bind:ready
-      bind:selected
+      bind:mode
+      bind:selectedEnterprise
       bind:myOffers
     />
 
-    {#if !ready && selected !== undefined && selected.name !== ""}
+    {#if mode === "readingFromBlockchain"}
+      reading data from blockchain - this may take some seconds
       <Spinner />
     {/if}
 
-    {#if ready}
+    {#if mode === "ready"}
       <YourEnterpriseNfTs
         {registeredEnterprises}
         {account}
         {provider}
         {nftsUnderManagement}
+        {selectedEnterprise}
       />
 
       <OtherEnterpriseNfTs
         {account}
         {provider}
         {nftsUnderManagement}
-        {selected}
+        {selectedEnterprise}
       />
     {/if}
   {/if}
@@ -62,6 +64,7 @@
   }
 
   main {
+    color: white;
     background-color: black;
     text-align: center;
     height: 2000px;

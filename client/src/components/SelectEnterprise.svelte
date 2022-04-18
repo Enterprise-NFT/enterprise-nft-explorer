@@ -3,29 +3,23 @@
     import { erc721ABI } from "../abi-constants.ts";
 
     export let registeredEnterprises;
-    export let selected;
+    export let selectedEnterprise;
     export let account = "{}";
     export let provider;
-    export let ready = false;
+    export let mode = "";
     export let nftsUnderManagement = [];
 
     let nftAddressesUnderManagement = [];
     let erc721Contract;
 
     async function getNFTInfos() {
-        // const fiduciarySmartContract = await new ethers.Contract(
-        //     selected.fiduciaryContractAddress,
-        //     fiduciaryABI,
-        //     provider
-        // );
+        mode = "readingFromBlockchain";
 
-        nftAddressesUnderManagement =
-            // await fiduciarySmartContract.getNFTsUnderManagement();
-            [
-                "0x747E7330f232064134768B710F8742097369702B",
-                "0x100C9aF4801b4a352b581B53c37f86daD9C887ec",
-                "0xfc69da2cA9ec827FD9AF64Cea3e1bD98cE19a3Af",
-            ];
+        nftAddressesUnderManagement = [
+            "0x747E7330f232064134768B710F8742097369702B",
+            "0x100C9aF4801b4a352b581B53c37f86daD9C887ec",
+            "0xfc69da2cA9ec827FD9AF64Cea3e1bD98cE19a3Af",
+        ];
 
         for (const nftAddressUnderManagement of nftAddressesUnderManagement) {
             let nftUnderManagement = {};
@@ -42,8 +36,6 @@
             nftUnderManagement.highestOffer =
                 await erc721Contract.getHighestOffer();
 
-            // alert(nftUnderManagement.highestOffer);
-
             nftUnderManagement.owner = await erc721Contract.owner();
 
             nftUnderManagement.purchaseRight1Status =
@@ -59,7 +51,7 @@
 
             nftsUnderManagement.push(nftUnderManagement);
         }
-        ready = true;
+        mode = "ready";
     }
 </script>
 
@@ -67,7 +59,7 @@
     {#if account !== ""}
         <h4>In which company are you interested in?</h4>
         <!-- <select value={selected} on:change={() => getNFTInfos}> -->
-        <select bind:value={selected} on:change={getNFTInfos}>
+        <select bind:value={selectedEnterprise} on:change={getNFTInfos}>
             {#each registeredEnterprises as registeredEnterprise}
                 <option value={registeredEnterprise}>
                     {registeredEnterprise.name}

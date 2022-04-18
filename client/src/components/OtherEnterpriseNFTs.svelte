@@ -8,6 +8,7 @@
     export let account = "";
     export let provider;
     export let offerTransactionLink = "";
+    export let selectedEnterprise;
 
     function showDetails(index) {
         nftsUnderManagement[index].showDetails =
@@ -56,7 +57,7 @@
     }
 </script>
 
-<h3>JPM Enterprise NFTs</h3>
+<h3>{selectedEnterprise.name} NFTs</h3>
 {#if offerTransactionLink !== ""}
     <p>
         Please check the <a href={offerTransactionLink} target="_blank"
@@ -154,9 +155,5 @@
         margin-bottom: 1em;
         margin-left: 1em;
         margin-right: 1em;
-    }
-
-    p {
-        color: white;
     }
 </style>
