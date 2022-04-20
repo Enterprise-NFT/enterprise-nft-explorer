@@ -56,93 +56,68 @@
     }
 </script>
 
-<p><br /></p>
-
-{#if myNFTsUnderManagement.length > 0}
-    <p><br /></p>
-    <h3>Your {selectedEnterprise.name} NFTs</h3>
-    {#each myNFTsUnderManagement as nftUnderManagement}
-        <div class="list">
-            <table>
-                <tr>
-                    <th> Artifact </th>
-                    <th> Name </th>
-                    <th> Development Service Purchase Right</th>
-                    <th> Consulting Service Purchase Right </th>
-                    <th> Action </th>
-                </tr>
-                <tr>
-                    <td style="width: fit-content;">
-                        <img
-                            src="https://raw.githubusercontent.com/Enterprise-NFT/nft-artifacts/main/EnterpriseNFTLogo.png"
-                            width="40"
-                            height="40"
-                            alt=""
-                        />
-                    </td>
-                    <td> {nftUnderManagement.name} </td>
-                    <td>
-                        <br />
-                        {nftUnderManagement.purchaseRight1Status} <br />
-                        <button on:click={requestService1}> Execute </button>
-                    </td>
-                    <td>
-                        <br />
-                        {nftUnderManagement.purchaseRight2Status} <br />
-                        <button on:click={requestService2}> Execute </button>
-                    </td>
-                    <td>
-                        <br /> Highest Bid: {UnitConverter.convert(
-                            "Wei",
-                            nftUnderManagement.highestOffer.amount,
-                            "Ether"
-                        )} Ether
-                        <br />
-                        {#if nftUnderManagement.highestOffer.amount > 0.0000000001}
-                            <button
-                                on:click={acceptOffer(
-                                    nftUnderManagement.address
-                                )}
-                            >
-                                Accept
-                            </button>
-                        {/if}
-                    </td>
-                </tr>
-            </table>
-        </div>
-    {/each}
-{/if}
-
-<p><br /></p>
-<p><br /></p>
-<p><br /></p>
+<div class="row add-bottom">
+    <div class="col-twelve">
+        {#if myNFTsUnderManagement.length > 0}
+            <h3>Your {selectedEnterprise.name} NFTs</h3>
+            {#each myNFTsUnderManagement as nftUnderManagement}
+                <div class="table-responsive">
+                    <table>
+                        <tr>
+                            <th> Artifact </th>
+                            <th> Name </th>
+                            <th> Development Service Purchase Right</th>
+                            <th> Consulting Service Purchase Right </th>
+                            <th> Action </th>
+                        </tr>
+                        <tr>
+                            <td style="width: fit-content;">
+                                <img
+                                    src="https://raw.githubusercontent.com/Enterprise-NFT/nft-artifacts/main/EnterpriseNFTLogo.png"
+                                    width="40"
+                                    height="40"
+                                    alt=""
+                                />
+                            </td>
+                            <td> {nftUnderManagement.name} </td>
+                            <td>
+                                <br />
+                                {nftUnderManagement.purchaseRight1Status} <br />
+                                <button on:click={requestService1}>
+                                    Execute
+                                </button>
+                            </td>
+                            <td>
+                                <br />
+                                {nftUnderManagement.purchaseRight2Status} <br />
+                                <button on:click={requestService2}>
+                                    Execute
+                                </button>
+                            </td>
+                            <td>
+                                <br /> Highest Bid: {UnitConverter.convert(
+                                    "Wei",
+                                    nftUnderManagement.highestOffer.amount,
+                                    "Ether"
+                                )} Ether
+                                <br />
+                                {#if nftUnderManagement.highestOffer.amount > 0.0000000001}
+                                    <button
+                                        on:click={acceptOffer(
+                                            nftUnderManagement.address
+                                        )}
+                                    >
+                                        Accept
+                                    </button>
+                                {/if}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            {/each}
+        {/if}
+    </div>
+</div>
 
 <style>
-    .list {
-        padding-top: 2em;
-    }
-
-    h3 {
-        color: turquoise;
-        font-size: 40px;
-        font-weight: 200;
-    }
-    table {
-        align-items: center;
-        width: 100;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    td,
-    th {
-        border: 1px solid white;
-    }
-
-    button {
-        margin-top: 1em;
-        margin-bottom: 1em;
-        margin-left: 1em;
-        margin-right: 1em;
-    }
 </style>

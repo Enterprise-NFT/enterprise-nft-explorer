@@ -55,13 +55,17 @@
     }
 </script>
 
-<div class="selectMenu">
+<div>
     {#if account !== ""}
         <h4>In which company are you interested in?</h4>
         <!-- <select value={selected} on:change={() => getNFTInfos}> -->
-        <select bind:value={selectedEnterprise} on:change={getNFTInfos}>
+        <select
+            class="selectMenu"
+            bind:value={selectedEnterprise}
+            on:change={getNFTInfos}
+        >
             {#each registeredEnterprises as registeredEnterprise}
-                <option value={registeredEnterprise}>
+                <option class="option" value={registeredEnterprise}>
                     {registeredEnterprise.name}
                 </option>
             {/each}
@@ -71,7 +75,15 @@
 
 <style>
     .selectMenu {
-        padding-top: 3vh;
-        color: white;
+
+        display: block;
+        margin: 0 auto;
+    }
+    .option {
+        background: #121212;
+        color: rgba(255, 255, 255, 0.7);
+        outline: none;
+        border: 0;
+        outline: 0;
     }
 </style>

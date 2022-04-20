@@ -57,103 +57,81 @@
     }
 </script>
 
-<h3>{selectedEnterprise.name} NFTs</h3>
-{#if offerTransactionLink !== ""}
-    <p>
-        Please check the <a href={offerTransactionLink} target="_blank"
-            >status of your offer on the Ethereum Blockchain</a
-        >
-    </p>
-{/if}
+<div class="row add-bottom">
+    <div class="col-twelve">
+        <h3>{selectedEnterprise.name} NFTs</h3>
+        {#if offerTransactionLink !== ""}
+            <p>
+                Please check the <a href={offerTransactionLink} target="_blank"
+                    >status of your offer on the Ethereum Blockchain</a
+                >
+            </p>
+        {/if}
 
-{#each nftsUnderManagement as nftUnderManagement, index}
-    {#if nftUnderManagement.owner.toLowerCase() !== account}
-        <div
-            class="list"
-            on:click={() => showDetails(index)}
-            style="cursor: pointer;"
-        >
-            <table>
-                <tr>
-                    <th> Artifact </th>
-                    <th> Name </th>
-                    <th> Owner</th>
-                    <th> Highest Bid </th>
-                    <th> Your Bid </th>
-                </tr>
-                <tr>
-                    <td style="width: fit-content;">
-                        <img
-                            src="https://raw.githubusercontent.com/Enterprise-NFT/nft-artifacts/main/EnterpriseNFTLogo.png"
-                            width="40"
-                            height="40"
-                            alt=""
-                        />
-                    </td>
-                    <td> {nftUnderManagement.name} </td>
+        {#each nftsUnderManagement as nftUnderManagement, index}
+            {#if nftUnderManagement.owner.toLowerCase() !== account}
+                <div
+                    class="table-responsive"
+                    on:click={() => showDetails(index)}
+                >
+                    <table>
+                        <tr>
+                            <th> Artifact </th>
+                            <th> Name </th>
+                            <th> Owner</th>
+                            <th> Highest Bid </th>
+                            <th> Your Bid </th>
+                        </tr>
+                        <tr>
+                            <td style="width: fit-content;">
+                                <img
+                                    src="https://raw.githubusercontent.com/Enterprise-NFT/nft-artifacts/main/EnterpriseNFTLogo.png"
+                                    width="40"
+                                    height="40"
+                                    alt=""
+                                />
+                            </td>
+                            <td> {nftUnderManagement.name} </td>
 
-                    {#if nftUnderManagement.owner === account}
-                        <td> You </td>
-                    {:else}
-                        <td> {nftUnderManagement.owner} </td>
+                            {#if nftUnderManagement.owner === account}
+                                <td> You </td>
+                            {:else}
+                                <td> {nftUnderManagement.owner} </td>
+                            {/if}
+
+                            <td>
+                                {UnitConverter.convert(
+                                    "Wei",
+                                    nftUnderManagement.highestOffer.amount,
+                                    "Ether"
+                                )} Ether
+                            </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    bind:value={nftUnderManagement.bid}
+                                    placeholder="... enter your offer"
+                                /> <br />
+
+                                {#if nftUnderManagement.bid > 0}
+                                    <button
+                                        on:click={makeOffer(nftUnderManagement)}
+                                    >
+                                        Make Offer
+                                    </button>
+                                {/if}
+                            </td>
+                        </tr>
+                    </table>
+
+                    {#if nftsUnderManagement[index].showDetails}
+                        <Details bind:nftOfInterest={nftUnderManagement} />
                     {/if}
-
-                    <td>
-                        {UnitConverter.convert(
-                            "Wei",
-                            nftUnderManagement.highestOffer.amount,
-                            "Ether"
-                        )} Ether
-                    </td>
-                    <td>
-                        <input
-                            type="number"
-                            bind:value={nftUnderManagement.bid}
-                            placeholder="... enter your offer"
-                        /> <br />
-
-                        {#if nftUnderManagement.bid > 0}
-                            <button on:click={makeOffer(nftUnderManagement)}>
-                                Make Offer
-                            </button>
-                        {/if}
-                    </td>
-                </tr>
-            </table>
-
-            {#if nftsUnderManagement[index].showDetails}
-                <Details bind:nftOfInterest={nftUnderManagement} />
+                </div>
             {/if}
-        </div>
-    {/if}
-{/each}
+        {/each}
+    </div>
+</div>
 
 <style>
-    .list {
-        padding-top: 2em;
-        color: white;
-    }
-
-    h3 {
-        color: turquoise;
-        font-size: 40px;
-        font-weight: 200;
-    }
-    table {
-        align-items: center;
-        width: 100;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    td,
-    th {
-        border: 1px solid white;
-    }
-
-    button {
-        margin-top: 1em;
-        margin-bottom: 1em;
-        margin-left: 1em;
-        margin-right: 1em;
-    }
 </style>

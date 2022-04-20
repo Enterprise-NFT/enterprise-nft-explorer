@@ -20,18 +20,18 @@
     }
 </script>
 
-<div class="account">
+<div >
     {#if account !== ""}
         You are logged in via the following browserwallet: <p />
-        {account} <br />on chainID {provider.provider.chainId}.
+       <h4 class="account"> {account}</h4> <p>on chainID {provider.provider.chainId}.</p>
     {:else}
-        <button on:click={connectToBrowserWallet}>Connect Browserwallet</button>
+        <button on:click={connectToBrowserWallet} class="btn btn--primary">Connect Browserwallet</button>
     {/if}
 </div>
 
 <style>
     .account {
-        padding-top: 2em;
-        color: white;
+       margin-top: 0;
     }
+
 </style>
